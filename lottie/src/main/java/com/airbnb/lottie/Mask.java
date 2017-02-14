@@ -14,7 +14,7 @@ class Mask {
   private final MaskMode maskMode;
   private final AnimatableShapeValue maskPath;
 
-  Mask(JSONObject json, int frameRate, LottieComposition composition) {
+  Mask(JSONObject json, LottieComposition composition) throws JSONException {
     try {
       boolean closed = false;
       if (json.has("cl")) {
@@ -35,10 +35,10 @@ class Mask {
           maskMode = MaskMode.MaskModeUnknown;
       }
 
-      maskPath = new AnimatableShapeValue(json.getJSONObject("pt"), frameRate, composition, closed);
+      maskPath = new AnimatableShapeValue(json.getJSONObject("pt"), composition, closed);
       //noinspection unused
       AnimatableIntegerValue opacity =
-          new AnimatableIntegerValue(json.getJSONObject("o"), frameRate, composition, false, true);
+          new AnimatableIntegerValue(json.getJSONObject("o"), composition, false, true);
       // TODO: use this.
     } catch (JSONException e) {
       throw new IllegalArgumentException("Unable to parse mask. " + json, e);

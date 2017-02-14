@@ -70,7 +70,8 @@ class LayerView extends AnimatableLayer {
     setRotation(layerModel.getRotation().createAnimation());
     setAlpha(layerModel.getOpacity().createAnimation());
 
-    setVisible(layerModel.hasInAnimation(), false);
+    // TODO: determine if this is necessary
+    // setVisible(layerModel.getInOutKeyframes() != null, false);
 
     List<Object> reversedItems = new ArrayList<>(layerModel.getShapes());
     Collections.reverse(reversedItems);
@@ -122,14 +123,13 @@ class LayerView extends AnimatableLayer {
   }
 
   private void buildAnimations() {
-    if (layerModel.hasInOutAnimation()) {
+    if (!layerModel.getInOutKeyframes().isEmpty()) {
       NumberKeyframeAnimation<Float> inOutAnimation = new NumberKeyframeAnimation<>(
+          0,
           layerModel.getComposition().getDuration(),
           layerModel.getComposition(),
-          layerModel.getInOutKeyTimes(),
-          Float.class,
-          layerModel.getInOutKeyFrames(),
-          Collections.<Interpolator>emptyList());
+          layerModel.getInOutKeyframes(),
+          Float.class);
       inOutAnimation.setIsDiscrete();
       inOutAnimation.addUpdateListener(new KeyframeAnimation.AnimationListener<Float>() {
         @Override public void onValueChanged(Float progress) {
@@ -159,7 +159,7 @@ class LayerView extends AnimatableLayer {
   private void setMask(MaskLayer mask) {
     this.mask = mask;
     // TODO: make this a field like other animation listeners and remove existing ones.
-    for (KeyframeAnimation<Path> animation : mask.getMasks()) {
+    for (BaseKeyframeAnimation<?, Path> animation : mask.getMasks()) {
       addAnimation(animation);
       animation.addUpdateListener(new KeyframeAnimation.AnimationListener<Path>() {
         @Override public void onValueChanged(Path progress) {

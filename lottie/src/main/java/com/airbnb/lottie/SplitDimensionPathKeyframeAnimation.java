@@ -1,7 +1,6 @@
 package com.airbnb.lottie;
 
 import android.graphics.PointF;
-import android.view.animation.Interpolator;
 
 import java.util.Collections;
 
@@ -12,8 +11,7 @@ class SplitDimensionPathKeyframeAnimation extends KeyframeAnimation<PointF> {
 
   SplitDimensionPathKeyframeAnimation(KeyframeAnimation<Float> xAnimation,
       KeyframeAnimation<Float> yAnimation) {
-    super(0, null, Collections.<Float>emptyList(),
-        Collections.<Interpolator>emptyList());
+    super(0, 0, null, Collections.<Keyframe<PointF>>emptyList());
 
     this.xAnimation = xAnimation;
     this.yAnimation = yAnimation;
@@ -28,8 +26,11 @@ class SplitDimensionPathKeyframeAnimation extends KeyframeAnimation<PointF> {
     }
   }
 
-  @Override PointF getValue() {
-    point.set(xAnimation.getValue(), yAnimation.getValue());
+  @Override public PointF getValue() {
+    return getValue(null, 0);
+  }
+
+  @Override PointF getValue(Keyframe<PointF> keyframe, float keyframeProgress) {
     return point;
   }
 }

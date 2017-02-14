@@ -10,12 +10,12 @@ class AnimatableScaleValue extends BaseAnimatableValue<ScaleXY, ScaleXY> {
     initialValue = new ScaleXY();
   }
 
-  AnimatableScaleValue(JSONObject scaleValues, int frameRate, LottieComposition composition,
-      boolean isDp) {
-    super(scaleValues, frameRate, composition, isDp);
+  AnimatableScaleValue(JSONObject scaleValues, LottieComposition composition,
+      boolean isDp) throws JSONException {
+    super(scaleValues, composition, isDp);
   }
 
-  @Override protected ScaleXY valueFromObject(Object object, float scale) throws JSONException {
+  @Override public ScaleXY valueFromObject(Object object, float scale) throws JSONException {
     JSONArray array = (JSONArray) object;
     try {
       if (array.length() >= 2) {
@@ -34,9 +34,6 @@ class AnimatableScaleValue extends BaseAnimatableValue<ScaleXY, ScaleXY> {
       return new StaticKeyframeAnimation<>(initialValue);
     }
 
-    ScaleKeyframeAnimation animation =
-        new ScaleKeyframeAnimation(duration, composition, keyTimes, keyValues, interpolators);
-    animation.setStartDelay(delay);
-    return animation;
+    return new ScaleKeyframeAnimation(getDelay(), getDuration(), composition, keyframes);
   }
 }

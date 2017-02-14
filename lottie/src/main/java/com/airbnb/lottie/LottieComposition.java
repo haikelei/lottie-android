@@ -170,7 +170,6 @@ public class LottieComposition {
       // Do nothing.
     }
 
-
     return composition;
   }
 
@@ -231,9 +230,10 @@ public class LottieComposition {
     return layers;
   }
 
-  long getStartFrame() {
-    return startFrame;
+  float getDurationFrames() {
+    return getDuration() * (float) getFrameRate() / 1000f;
   }
+
 
   boolean hasMasks() {
     return hasMasks;

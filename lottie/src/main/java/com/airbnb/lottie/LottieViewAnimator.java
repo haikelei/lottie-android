@@ -44,7 +44,7 @@ public class LottieViewAnimator {
   private final ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
   private final Map<String, View> viewsMap;
 
-  private final List<KeyframeAnimation<?>> animatableValues = new ArrayList<>();
+  private final List<BaseKeyframeAnimation<?, ?>> animatableValues = new ArrayList<>();
 
   private LottieComposition composition;
   private boolean startWhenReady = false;
@@ -63,7 +63,7 @@ public class LottieViewAnimator {
     animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
-        for (KeyframeAnimation<?> av : animatableValues) {
+        for (BaseKeyframeAnimation<?, ?> av : animatableValues) {
           av.setProgress(animation.getAnimatedFraction());
         }
       }
@@ -83,7 +83,7 @@ public class LottieViewAnimator {
       }
 
       if (layer.getPosition().hasAnimation()) {
-        KeyframeAnimation<PointF> position = layer.getPosition().createAnimation();
+        BaseKeyframeAnimation<?, PointF> position = layer.getPosition().createAnimation();
         position.addUpdateListener(new KeyframeAnimation.AnimationListener<PointF>() {
           @Override
           public void onValueChanged(PointF progress) {
@@ -135,7 +135,7 @@ public class LottieViewAnimator {
       view.setAlpha(layer.getOpacity().getInitialValue() / 255f);
 
       if (layer.getAnchor().hasAnimation()) {
-        KeyframeAnimation<PointF> anchor = layer.getAnchor().createAnimation();
+        BaseKeyframeAnimation<?, PointF> anchor = layer.getAnchor().createAnimation();
         anchor.addUpdateListener(new KeyframeAnimation.AnimationListener<PointF>() {
           @Override
           public void onValueChanged(PointF anchor) {

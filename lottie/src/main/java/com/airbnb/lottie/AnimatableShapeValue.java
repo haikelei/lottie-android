@@ -11,14 +11,13 @@ class AnimatableShapeValue extends BaseAnimatableValue<ShapeData, Path> {
   private final Path convertTypePath = new Path();
   private boolean closed;
 
-  AnimatableShapeValue(JSONObject json, int frameRate, LottieComposition composition,
-      boolean closed) {
-    super(null, frameRate, composition, true);
+  AnimatableShapeValue(JSONObject json, LottieComposition composition,
+      boolean closed) throws JSONException {
+    super(json, composition, true);
     this.closed = closed;
-    init(json);
   }
 
-  @Override protected ShapeData valueFromObject(Object object, float scale) throws JSONException {
+  @Override public ShapeData valueFromObject(Object object, float scale) throws JSONException {
     JSONObject pointsData = null;
     if (object instanceof JSONArray) {
       try {
@@ -130,15 +129,12 @@ class AnimatableShapeValue extends BaseAnimatableValue<ShapeData, Path> {
     }
   }
 
-  @Override public KeyframeAnimation<Path> createAnimation() {
+  @Override public BaseKeyframeAnimation<?, Path> createAnimation() {
     if (!hasAnimation()) {
       return new StaticKeyframeAnimation<>(convertType(initialValue));
     }
 
-    ShapeKeyframeAnimation animation =
-        new ShapeKeyframeAnimation(duration, composition, keyTimes, keyValues, interpolators);
-    animation.setStartDelay(delay);
-    return animation;
+    return new ShapeKeyframeAnimation(getDelay(), getDuration(), composition, keyframes);
   }
 
   @Override Path convertType(ShapeData shapeData) {
